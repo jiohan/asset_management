@@ -1,0 +1,28 @@
+# env files
+.env
+.env.local
+.env.*.local
+
+# Next.js
+.next/
+out/
+
+# dependencies
+node_modules/
+
+# TypeScript
+*.tsbuildinfo
+
+# Vercel
+.vercel/
+
+# Supabase
+supabase/.temp/
+
+# Testing
+playwright-report/
+test-results/
+
+# misc
+.DS_Store
+*.log
