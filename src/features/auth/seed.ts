@@ -31,23 +31,6 @@ export async function seedUserData(userId: string, email: string, nickname: stri
 
   if (profileError) throw profileError
 
-  // 기본 계좌 insert (이미 있으면 skip)
-  const { data: existingAccounts } = await supabase
-    .from('accounts')
-    .select('id')
-    .eq('user_id', userId)
-    .limit(1)
-
-  if (!existingAccounts || existingAccounts.length === 0) {
-    const { error: accountError } = await supabase.from('accounts').insert({
-      user_id: userId,
-      name: '기본 계좌',
-      account_type: 'checking',
-      opening_balance: 0,
-    })
-    if (accountError) throw accountError
-  }
-
   // 기본 카테고리 insert (이미 있으면 skip)
   const { data: existingCategories } = await supabase
     .from('categories')

@@ -3,7 +3,7 @@ import { updateSession } from '@/lib/supabase/middleware'
 
 const AUTH_ROUTES = ['/signup', '/login', '/forgot-password', '/verify-email']
 // (app) 그룹 전체 보호 — Phase 2에서 /transactions, /accounts 추가됨
-const PROTECTED_PREFIXES = ['/dashboard', '/transactions', '/accounts']
+const PROTECTED_PREFIXES = ['/dashboard', '/transactions', '/accounts', '/setup-account']
 
 export async function proxy(request: NextRequest) {
   const { supabaseResponse, user } = await updateSession(request)

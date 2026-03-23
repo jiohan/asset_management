@@ -20,6 +20,15 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   if (!profile?.nickname) redirect('/nickname')
 
+  // 계좌 미등록 시 /setup-account로 강제 이동
+  const { data: firstAccount } = await supabase
+    .from('accounts')
+    .select('id')
+    .limit(1)
+    .maybeSingle()
+
+  if (!firstAccount) redirect('/setup-account')
+
   return (
     <div className="flex min-h-screen bg-[#F9F9F8]">
       <aside className="w-60 shrink-0 flex flex-col bg-white border-r border-gray-100 min-h-screen">

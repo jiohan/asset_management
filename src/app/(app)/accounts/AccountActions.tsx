@@ -54,7 +54,19 @@ export function EditAccountDialog({
           <div className="py-4 space-y-3">
             <div className="space-y-1.5">
               <Label htmlFor="edit-name">계좌명</Label>
-              <Input id="edit-name" name="name" defaultValue={account.name} maxLength={30} />
+              <Input id="edit-name" name="name" defaultValue={account.name} maxLength={30} required />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-opening-balance">초기 잔액 (원)</Label>
+              <Input
+                id="edit-opening-balance"
+                name="opening_balance"
+                type="number"
+                min={0}
+                step={1}
+                defaultValue={account.opening_balance}
+                inputMode="numeric"
+              />
             </div>
             {error && <p className="text-sm text-rose-600">{error}</p>}
           </div>
