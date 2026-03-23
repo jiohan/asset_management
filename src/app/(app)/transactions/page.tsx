@@ -10,6 +10,7 @@ import { getActiveCategories } from '@/features/categories/queries'
 import { formatKRW } from '@/lib/format'
 import TransactionFilters from './TransactionFilters'
 import DeleteTransactionButton from './DeleteTransactionButton'
+import TransactionDrawer from './TransactionDrawer'
 
 const TYPE_LABELS: Record<string, string> = {
   income: '수입',
@@ -51,12 +52,7 @@ export default async function TransactionsPage({
     <div className="p-8 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-gray-900">거래 내역</h1>
-        <Link
-          href="/transactions/new"
-          className="inline-flex items-center justify-center rounded-lg bg-primary px-2.5 h-8 text-sm font-medium text-primary-foreground transition-all"
-        >
-          + 거래 추가
-        </Link>
+        <TransactionDrawer accounts={accounts} categories={categories} />
       </div>
 
       <div className="mb-4">

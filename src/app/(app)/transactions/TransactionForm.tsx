@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -42,11 +42,17 @@ export default function TransactionForm({
   categories,
   action,
   defaultValues,
+  showContinueButton,
+  onSaved,
+  onSavedContinue,
 }: {
   accounts: Account[]
   categories: Category[]
   action: (formData: FormData) => Promise<{ error?: string } | undefined | void>
   defaultValues?: Partial<TransactionWithRelations> & { id?: string }
+  showContinueButton?: boolean
+  onSaved?: () => void
+  onSavedContinue?: (meta: { type: TransactionType; accountId: string }) => void
 }) {
   const initialType: TransactionType =
     (defaultValues?.type as TransactionType) ?? 'expense'
@@ -60,6 +66,7 @@ export default function TransactionForm({
   })
   const [serverError, setServerError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const continueRef = useRef(false)
 
   const filteredCategories = categories.filter((c) => c.type === type)
 
@@ -86,6 +93,18 @@ export default function TransactionForm({
 
     if (result?.error) {
       setServerError(result.error)
+      continueRef.current = false
+      return
+    }
+
+    // result가 defined = 리다이렉트 없는 드로어 액션 (addTransaction)
+    if (result !== undefined) {
+      if (continueRef.current) {
+        onSavedContinue?.({ type, accountId })
+      } else {
+        onSaved?.()
+      }
+      continueRef.current = false
     }
   }
 
@@ -241,7 +260,23 @@ export default function TransactionForm({
       )}
 
       <div className="flex gap-3 pt-2">
-        <Button type="submit" className="flex-1" disabled={loading}>
+        {showContinueButton && (
+          <Button
+            type="submit"
+            variant="outline"
+            className="flex-1"
+            disabled={loading}
+            onClick={() => { continueRef.current = true }}
+          >
+            저장 후 계속
+          </Button>
+        )}
+        <Button
+          type="submit"
+          className="flex-1"
+          disabled={loading}
+          onClick={() => { continueRef.current = false }}
+        >
           {defaultValues?.id ? '수정' : '저장'}
         </Button>
       </div>
