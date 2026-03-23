@@ -2,14 +2,15 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 
 const AUTH_ROUTES = ['/signup', '/login', '/forgot-password', '/verify-email']
-const PROTECTED_PREFIX = '/dashboard'
+// (app) 그룹 전체 보호 — Phase 2에서 /transactions, /accounts 추가됨
+const PROTECTED_PREFIXES = ['/dashboard', '/transactions', '/accounts']
 
 export async function proxy(request: NextRequest) {
   const { supabaseResponse, user } = await updateSession(request)
   const pathname = request.nextUrl.pathname
 
   // 미로그인 상태로 보호된 경로 접근
-  if (!user && pathname.startsWith(PROTECTED_PREFIX)) {
+  if (!user && PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)

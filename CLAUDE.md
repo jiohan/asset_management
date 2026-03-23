@@ -72,14 +72,14 @@ Browser
 - **일반 계좌**: `opening_balance + Σincome - Σexpense + Σtransfer수신 - Σtransfer송신`
 - **투자 계좌**: `opening_balance + Σtransfer수신 - Σtransfer송신 - Σ매수(qty×price+costs) + Σ매도(qty×price-costs) + Σinvestment_events`
 - **카드 계좌** (부채): `opening_balance + Σexpense - Σtransfer수신(납부)` — DB는 양수 저장, UI에서 부채 표시
-- **총자산**: `Σ일반계좌잔액 - Σ카드계좌잔액`
+- **총자산**: `Σ(일반+투자 계좌 잔액) - Σ카드계좌잔액`
 
 투자 매수/매도는 `transactions`에 기록하지 않음. `investment_trades`만으로 투자 계좌 현금 변화를 계산.
 
 ### Auth Flow
 
 `/auth/callback` → 신규 Google 사용자는 `/nickname` → `/dashboard`
-미인증 상태로 `/dashboard` 이하 접근 시 → `/login` (미들웨어 처리)
+미인증 상태로 `(app)` 보호 라우트(`/dashboard`, `/transactions`, `/accounts`) 접근 시 → `/login` (미들웨어/프록시 처리)
 회원가입/Google 로그인 완료 후 서버 액션에서 기본 계좌 1개 + 기본 카테고리 14개 자동 생성
 
 ### Development Phases (Vertical Slice)
