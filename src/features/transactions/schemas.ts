@@ -4,7 +4,7 @@ export const createTransactionSchema = z.object({
   type: z.enum(['income', 'expense', 'transfer']),
   account_id: z.string().min(1, '계좌를 선택하세요'),
   transfer_to_account_id: z.string().optional().nullable(),
-  amount: z.coerce.number().int().positive('금액은 1원 이상이어야 합니다'),
+  amount: z.coerce.number().int().positive('금액은 1원 이상이어야 합니다').max(2147483647, '금액은 21억 원을 초과할 수 없습니다'),
   category_id: z.string().optional().nullable(),
   transaction_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, '날짜 형식이 올바르지 않습니다'),
   memo: z.string().max(100, '메모는 100자 이내여야 합니다').optional(),

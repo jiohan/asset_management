@@ -28,9 +28,13 @@ export async function getActiveAccounts(): Promise<Account[]> {
 
 export async function getAllTransactionsForBalance(): Promise<TransactionForBalance[]> {
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('인증이 필요합니다')
+
   const { data, error } = await supabase
     .from('transactions')
     .select('type, amount, account_id, transfer_to_account_id')
+    .eq('user_id', user.id)
 
   if (error) throw error
   return (data ?? []) as TransactionForBalance[]

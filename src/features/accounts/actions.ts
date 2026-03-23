@@ -21,6 +21,7 @@ export async function createAccount(formData: FormData) {
   if (error) return { error: error.message }
 
   revalidatePath('/accounts')
+  return {}
 }
 
 export async function updateAccount(formData: FormData) {
@@ -76,4 +77,5 @@ export async function deactivateAccount(formData: FormData) {
   if (error) return { error: error.message }
 
   revalidatePath('/accounts')
+  return {}
 }
