@@ -44,7 +44,7 @@ export async function updateAccount(formData: FormData) {
 
   const { error } = await supabase
     .from('accounts')
-    .update({ name: parsed.data.name, opening_balance: parsed.data.opening_balance })
+    .update({ name: parsed.data.name })
     .eq('id', parsed.data.id)
 
   if (error) return { error: error.message }

@@ -34,6 +34,11 @@ async function insertTransactionRecord(
   if (account.account_type === 'card' && parsed.data.type === 'income') {
     return { error: '카드 계좌에는 수입을 등록할 수 없습니다' }
   }
+  // 카드 계좌는 이체 출발 불가: balance-calculator가 카드의 transfer 송신을 처리하지 않아
+  // card→일반 이체 시 카드 부채 감소 없이 도착 계좌만 증가하여 총자산이 부풀려짐
+  if (account.account_type === 'card' && parsed.data.type === 'transfer') {
+    return { error: '카드 계좌에서는 이체할 수 없습니다' }
+  }
   if (account.account_type === 'investment' && parsed.data.type !== 'transfer') {
     return { error: '투자 계좌에는 이체만 등록할 수 있습니다' }
   }
@@ -132,6 +137,9 @@ export async function updateTransaction(formData: FormData) {
 
   if (account.account_type === 'card' && parsed.data.type === 'income') {
     return { error: '카드 계좌에는 수입을 등록할 수 없습니다' }
+  }
+  if (account.account_type === 'card' && parsed.data.type === 'transfer') {
+    return { error: '카드 계좌에서는 이체할 수 없습니다' }
   }
   if (account.account_type === 'investment' && parsed.data.type !== 'transfer') {
     return { error: '투자 계좌에는 이체만 등록할 수 있습니다' }
