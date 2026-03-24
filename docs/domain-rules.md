@@ -23,7 +23,7 @@
 | user_id | UUID | profiles.id FK |
 | name | TEXT | |
 | account_type | TEXT | cash / checking / savings / investment / card |
-| opening_balance | INTEGER | 양수. 계좌 생성 시 입력 |
+| opening_balance | INTEGER | 0 이상. 계좌 생성 시 입력 |
 | is_active | BOOLEAN | DEFAULT true |
 | created_at | TIMESTAMPTZ | |
 | updated_at | TIMESTAMPTZ | |
@@ -174,7 +174,7 @@ UNIQUE 제약 없음 — 같은 월에 여러 개 저장 가능.
 ```
 
 ### 리다이렉트 규칙
-- `/dashboard` 이하 전체: 미로그인 시 `/login` 리다이렉트 (미들웨어 처리)
+- `(app)` 보호 라우트 (`/dashboard`, `/transactions`, `/accounts`) : 미로그인 시 `/login` 리다이렉트 (미들웨어/프록시 처리)
 - `(auth)` 라우트 그룹: 로그인 상태에서 접근 시 `/dashboard` 리다이렉트
 - 로그아웃: 어디서든 → `/login`
 
@@ -230,6 +230,8 @@ UNIQUE 제약 없음 — 같은 월에 여러 개 저장 가능.
 - `transaction_date`: 기본값은 오늘. 미래 날짜 허용 (예약 기록 가능).
 - `memo`: 최대 100자.
 - `transfer_to_account_id`: `account_id`와 같은 계좌 불가 (자기 자신으로 이체 불가).
+- `transfer`: `category_id` 사용 불가. 반드시 `NULL`.
+- `income` / `expense`: `transfer_to_account_id` 사용 불가. 반드시 `NULL`.
 - 비활성화 계좌 선택 불가.
 
 ### 환불/취소 처리
@@ -388,7 +390,7 @@ type DashboardStats = {
   totalTransfer: number         // 이체 총액 (정보용, 수입/지출 미포함)
 
   // 전체 기준
-  totalAssets: number           // 총자산 = 일반 계좌 합계 - 카드 계좌 합계
+  totalAssets: number           // 총자산 = (일반+투자 계좌 합계) - 카드 계좌 합계
 
   accountBalances: Array<{
     id: string
