@@ -32,12 +32,12 @@ function todayStr() {
 
 // 계좌 타입별 출발 계좌 허용 여부
 // 카드: expense만 허용(카드 지출), income/transfer 불가
-// 투자: transfer만 허용, income/expense 불가
+// 투자: transfer만 허용, income/expense 불가 — transfer 출발은 허용 (balance-calculator 지원)
 function isAccountAllowedAsSource(accountType: string, type: TransactionType): boolean {
   if (type === 'income') return accountType !== 'card' && accountType !== 'investment'
   if (type === 'expense') return accountType !== 'investment'
-  // transfer: 카드는 출발 계좌 불가 (잔액 계산 모델상 카드→일반 이체는 지원하지 않음)
-  return accountType !== 'card' && accountType !== 'investment'
+  // transfer: 카드는 출발 불가, 투자는 출발 허용 (잔액 계산 모델이 투자의 transfer 송신을 처리함)
+  return accountType !== 'card'
 }
 
 export default function TransactionForm({
@@ -80,9 +80,10 @@ export default function TransactionForm({
       a.id === defaultValues?.account?.id
   )
 
-  // 도착 계좌: 출발 계좌 제외
+  // 도착 계좌: 출발 계좌 제외. 수정 시 기존 거래의 도착 계좌는 비활성이어도 포함.
   const destinationAccounts = accounts.filter(
-    (a) => a.id !== accountId && a.is_active
+    (a) => a.id !== accountId &&
+      (a.is_active || a.id === defaultValues?.transfer_to_account?.id)
   )
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

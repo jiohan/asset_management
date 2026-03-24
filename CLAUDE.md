@@ -19,7 +19,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | Schema management | Supabase CLI migrations (대시보드 직접 SQL 금지) |
 | Styling | Tailwind CSS v4 + shadcn/ui |
 | Server state | TanStack Query v5 (Phase 3부터 필요 시 도입. Phase 2까지는 Server Component + revalidatePath 패턴만 사용) |
-| Forms | Zod (Server Actions에서 직접 safeParse. React Hook Form 미도입) |
+| Forms | Zod (Server Actions에서 직접 safeParse). 인증 폼(로그인/회원가입)만 React Hook Form 사용. 앱 폼(거래/계좌)은 미사용 |
 | Charts | Recharts v3 |
 | AI report | Anthropic Claude API (Phase 5 시작 직전 모델 ID 재확인) |
 | Email | Resend (Supabase SMTP에 연동) |
@@ -82,7 +82,7 @@ Browser
 
 `/auth/callback` → 신규 Google 사용자는 `/nickname` → `/dashboard`
 미인증 상태로 `(app)` 보호 라우트(`/dashboard`, `/transactions`, `/accounts`, `/setup-account`) 접근 시 → `/login` (미들웨어/프록시 처리)
-회원가입/Google 로그인 완료 후 서버 액션에서 기본 계좌 1개 + 기본 카테고리 14개 자동 생성
+회원가입/Google 로그인 완료 후 서버 액션에서 기본 카테고리 14개 자동 생성 (계좌는 /setup-account에서 수동 등록)
 
 ### Development Phases (Vertical Slice)
 
@@ -106,7 +106,7 @@ Phase 진행 시: vertical-slices.md를 기반으로 상세 계획 문서(slice1
 - **날짜 컬럼**: `transaction_date`, `trade_date`, `event_date`, `target_month`는 `DATE` 타입, `created_at`/`updated_at`은 `TIMESTAMPTZ`
 - **`target_month`는 항상 해당 월의 1일로 저장** (예: 2026-03-01)
 - **accounts, categories(기본/거래있음)는 하드 삭제 없음** — `is_active = false`로 비활성화
-- **`opening_balance`는 계좌 생성 시 1회만 설정, 이후 변경 불가** — 소급 수정은 잔액·총자산 히스토리 전체를 바꾸는 무결성 문제
+- **`opening_balance`와 `account_type`은 계좌 생성 시 1회만 설정, 이후 변경 불가** — 소급 수정은 잔액·총자산 히스토리 전체를 바꾸는 무결성 문제. DB 트리거(`trg_prevent_account_immutable_fields`)로 이중 차단
 - **회원가입 Seed 로직은 Supabase 트리거가 아닌 Next.js 서버 액션**으로 처리
 - **Vercel Hobby 플랜**: 개인·비상업 용도 전제. 유료화·광고·유급 팀원 발생 시 Pro 플랜 전환 필요
 

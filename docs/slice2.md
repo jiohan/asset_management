@@ -8,8 +8,8 @@
 
 ## DB 현황
 
-Phase 2에서 소규모 마이그레이션 1개 추가. Phase 1 테이블 구조는 그대로 사용하되,
-transactions 테이블에 데이터 정합성 제약을 추가한다.
+Phase 2에서 마이그레이션 3개 추가. Phase 1 테이블 구조는 그대로 사용하되,
+transactions 테이블에 데이터 정합성 제약을 추가하고 account 불변 필드·교차 소유권 트리거를 보강한다.
 
 | 테이블 | 용도 |
 |--------|------|
@@ -37,9 +37,11 @@ transactions 테이블에 데이터 정합성 제약을 추가한다.
 
 ## Phase 2 마이그레이션
 
-**파일**: `supabase/migrations/20260323080310_phase2_transactions_constraints.sql`
+총 3개 파일. Zod 앱 레벨 검증과 이중으로 DB 레벨에서 보호한다.
 
-transactions 테이블에 아래 4가지 제약을 추가한다. Zod 앱 레벨 검증과 이중으로 보호한다.
+**파일 1**: `supabase/migrations/20260323080310_phase2_transactions_constraints.sql`
+
+transactions 테이블에 아래 4가지 CHECK 제약을 추가한다.
 
 ```sql
 -- transfer는 category_id NULL 강제
@@ -61,6 +63,16 @@ ALTER TABLE transactions
 ALTER TABLE transactions
   ALTER COLUMN transaction_date SET DEFAULT CURRENT_DATE;
 ```
+
+**파일 2**: `supabase/migrations/20260323134216_phase2_account_type_constraints.sql`
+
+카드 account_type + income 차단, 투자 account_type + non-transfer 차단 트리거 (`trg_enforce_transaction_account_type`).
+
+**파일 3**: `supabase/migrations/20260324000000_phase2_integrity_fixes.sql` — 카드 account_type + transfer 출발 차단 (트리거 업데이트), transfer→destination NOT NULL, income/expense→category_id NOT NULL CHECK 제약.
+
+**파일 4** (보강): `supabase/migrations/20260324000001_phase2_account_immutability.sql` — `opening_balance`·`account_type` BEFORE UPDATE 트리거.
+
+**파일 5** (보강): `supabase/migrations/20260324000002_phase2_transaction_ownership.sql` — account_id·transfer_to_account_id·category_id 소유권 + category.type 일치 BEFORE INSERT/UPDATE 트리거.
 
 마이그레이션 적용:
 ```bash
@@ -596,11 +608,11 @@ Server Component: `getTransactionById(id)` → 없거나 타인 것이면 `notFo
 
 브라우저에서 직접 확인:
 
-1. 기본 계좌 `opening_balance = 0`
+1. `/setup-account`에서 계좌 생성 (`opening_balance = 0`)
 2. 수입 ₩100,000 입력 → 계좌 잔액 ₩100,000 확인
 3. 지출 ₩30,000 입력 → 잔액 ₩70,000 확인
 4. 새 계좌 생성 (checking, `opening_balance = 0`)
-5. 기본 계좌 → 새 계좌 이체 ₩20,000 → 기본 계좌 ₩50,000 / 새 계좌 ₩20,000 확인
+5. 첫 계좌 → 새 계좌 이체 ₩20,000 → 첫 계좌 ₩50,000 / 새 계좌 ₩20,000 확인
 6. 카드 계좌 생성 → 지출 ₩50,000 → "결제 예정 ₩50,000" 표시 확인
 7. 거래 수정: 지출 ₩30,000 → ₩50,000 변경 → 잔액 재계산 확인
 8. 거래 삭제 (확인 모달 → 확인) → 잔액 재계산 확인
