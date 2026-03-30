@@ -3,6 +3,10 @@ import type { Tables } from '@/lib/supabase/database.types'
 
 export type TransactionFilters = {
   month?: string
+  // month 대신 직접 날짜 범위를 지정할 때 사용 (YYYY-MM-DD 형식)
+  // month와 동시에 사용하지 않는다 — 호출 측에서 둘 중 하나만 사용한다.
+  dateFrom?: string
+  dateTo?: string
   account_id?: string
   category_id?: string
   type?: 'income' | 'expense' | 'transfer'
@@ -63,6 +67,9 @@ export async function getTransactions(
     const from = `${year}-${String(month).padStart(2, '0')}-01`
     const nextMonth = month === 12 ? `${year + 1}-01-01` : `${year}-${String(month + 1).padStart(2, '0')}-01`
     query = query.gte('transaction_date', from).lt('transaction_date', nextMonth)
+  } else if (filters?.dateFrom || filters?.dateTo) {
+    if (filters.dateFrom) query = query.gte('transaction_date', filters.dateFrom)
+    if (filters.dateTo) query = query.lte('transaction_date', filters.dateTo)
   }
 
   if (filters?.account_id) {
