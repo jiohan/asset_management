@@ -14,7 +14,7 @@ function StatCard({
 }) {
   return (
     <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6">
-      <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-3">{label}</p>
+      <p className="text-xs font-medium text-gray-400 mb-3">{label}</p>
       <p className={`text-2xl font-semibold tabular-nums ${valueColor ?? 'text-gray-900'}`}>
         {value}
       </p>
@@ -40,6 +40,7 @@ export default function StatsCards({
       <StatCard
         label="총자산"
         value={formatKRW(totalAssets)}
+        valueColor={totalAssets < 0 ? 'text-rose-600' : 'text-gray-900'}
       />
       <StatCard
         label="이번 달 수입"

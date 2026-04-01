@@ -51,49 +51,61 @@ export default function TransactionFilters({
   const currentMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`
 
   return (
-    <div className="flex flex-wrap gap-2">
-      <select
-        className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
-        value={searchParams.get('month') ?? currentMonth}
-        onChange={(e) => update('month', e.target.value)}
-      >
-        {monthOptions.map((o) => (
-          <option key={o.value} value={o.value}>{o.label}</option>
-        ))}
-        <option value="">전체 기간</option>
-      </select>
+    <div className="flex flex-wrap gap-3 items-end">
+      <div className="flex flex-col gap-1">
+        <label className="text-xs text-gray-500">기간</label>
+        <select
+          className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+          value={searchParams.get('month') ?? currentMonth}
+          onChange={(e) => update('month', e.target.value)}
+        >
+          {monthOptions.map((o) => (
+            <option key={o.value} value={o.value}>{o.label}</option>
+          ))}
+          <option value="">전체 기간</option>
+        </select>
+      </div>
 
-      <select
-        className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
-        value={searchParams.get('account_id') ?? ''}
-        onChange={(e) => update('account_id', e.target.value)}
-      >
-        <option value="">전체 계좌</option>
-        {accounts.map((a) => (
-          <option key={a.id} value={a.id}>{a.name}</option>
-        ))}
-      </select>
+      <div className="flex flex-col gap-1">
+        <label className="text-xs text-gray-500">계좌</label>
+        <select
+          className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+          value={searchParams.get('account_id') ?? ''}
+          onChange={(e) => update('account_id', e.target.value)}
+        >
+          <option value="">전체 계좌</option>
+          {accounts.map((a) => (
+            <option key={a.id} value={a.id}>{a.name}</option>
+          ))}
+        </select>
+      </div>
 
-      <select
-        className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
-        value={searchParams.get('category_id') ?? ''}
-        onChange={(e) => update('category_id', e.target.value)}
-      >
-        <option value="">전체 카테고리</option>
-        {categories.map((c) => (
-          <option key={c.id} value={c.id}>{c.name}</option>
-        ))}
-      </select>
+      <div className="flex flex-col gap-1">
+        <label className="text-xs text-gray-500">카테고리</label>
+        <select
+          className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+          value={searchParams.get('category_id') ?? ''}
+          onChange={(e) => update('category_id', e.target.value)}
+        >
+          <option value="">전체 카테고리</option>
+          {categories.map((c) => (
+            <option key={c.id} value={c.id}>{c.name}</option>
+          ))}
+        </select>
+      </div>
 
-      <select
-        className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
-        value={searchParams.get('type') ?? ''}
-        onChange={(e) => update('type', e.target.value)}
-      >
-        {TYPE_OPTIONS.map((o) => (
-          <option key={o.value} value={o.value}>{o.label}</option>
-        ))}
-      </select>
+      <div className="flex flex-col gap-1">
+        <label className="text-xs text-gray-500">타입</label>
+        <select
+          className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+          value={searchParams.get('type') ?? ''}
+          onChange={(e) => update('type', e.target.value)}
+        >
+          {TYPE_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>{o.label}</option>
+          ))}
+        </select>
+      </div>
     </div>
   )
 }
