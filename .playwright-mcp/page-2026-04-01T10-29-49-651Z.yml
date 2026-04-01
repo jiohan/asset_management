@@ -1,0 +1,37 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]: 가계부
+      - navigation [ref=e5]:
+        - link "대시보드" [ref=e6] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e7]
+          - text: 대시보드
+        - link "거래 내역" [ref=e12] [cursor=pointer]:
+          - /url: /transactions
+          - img [ref=e13]
+          - text: 거래 내역
+        - link "계좌 관리" [ref=e16] [cursor=pointer]:
+          - /url: /accounts
+          - img [ref=e17]
+          - text: 계좌 관리
+      - generic [ref=e20]:
+        - paragraph [ref=e21]: gurrgini
+        - button "로그아웃" [ref=e23]
+    - main [ref=e24]:
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - heading "계좌 관리" [level=1] [ref=e27]
+          - button "+ 계좌 추가" [ref=e28]
+        - generic [ref=e30]:
+          - generic [ref=e32]:
+            - generic [ref=e34]: 기본 계좌
+            - text: 입출금
+          - generic [ref=e35]:
+            - paragraph [ref=e37]: ₩-10,000
+            - generic [ref=e38]:
+              - button "수정" [ref=e39]
+              - button "비활성화" [ref=e40]
+  - button "Open Next.js Dev Tools" [ref=e46] [cursor=pointer]:
+    - img [ref=e47]
+  - alert [ref=e50]

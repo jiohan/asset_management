@@ -1,0 +1,92 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]: 가계부
+      - navigation [ref=e5]:
+        - link "대시보드" [ref=e6] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e7]
+          - text: 대시보드
+        - link "거래 내역" [ref=e12] [cursor=pointer]:
+          - /url: /transactions
+          - img [ref=e13]
+          - text: 거래 내역
+        - link "계좌 관리" [ref=e16] [cursor=pointer]:
+          - /url: /accounts
+          - img [ref=e17]
+          - text: 계좌 관리
+      - generic [ref=e20]:
+        - paragraph [ref=e21]: gurrgini
+        - button "로그아웃" [ref=e23]
+    - main [ref=e24]:
+      - main [ref=e25]:
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - heading "대시보드" [level=1] [ref=e28]
+            - generic [ref=e29]:
+              - button "이전 달" [ref=e30]:
+                - img [ref=e31]
+              - generic [ref=e33]: 2026년 4월
+              - button "다음 달" [disabled] [ref=e34]:
+                - img [ref=e35]
+          - generic [ref=e37]:
+            - generic [ref=e38]:
+              - paragraph [ref=e39]: 총자산
+              - paragraph [ref=e40]: ₩-10,000
+            - generic [ref=e41]:
+              - paragraph [ref=e42]: 이번 달 수입
+              - paragraph [ref=e43]: +₩0
+            - generic [ref=e44]:
+              - paragraph [ref=e45]: 이번 달 지출
+              - paragraph [ref=e46]: ₩0
+            - generic [ref=e47]:
+              - paragraph [ref=e48]: 순수입
+              - paragraph [ref=e49]: +₩0
+              - paragraph [ref=e50]: 이체 ₩0
+          - generic [ref=e51]:
+            - heading "월간 수입 / 지출 트렌드" [level=2] [ref=e52]
+            - generic [ref=e54]:
+              - list [ref=e56]:
+                - listitem [ref=e57]:
+                  - img "수입 legend icon" [ref=e58]
+                  - text: 수입
+                - listitem [ref=e60]:
+                  - img "지출 legend icon" [ref=e61]
+                  - text: 지출
+              - application [ref=e63]:
+                - generic [ref=e67]:
+                  - generic [ref=e68]:
+                    - generic [ref=e70]: 11월
+                    - generic [ref=e72]: 12월
+                    - generic [ref=e74]: 1월
+                    - generic [ref=e76]: 2월
+                    - generic [ref=e78]: 3월
+                    - generic [ref=e80]: 4월
+                  - generic [ref=e81]:
+                    - generic [ref=e83]: "0"
+                    - generic [ref=e85]: "2500"
+                    - generic [ref=e87]: "5000"
+                    - generic [ref=e89]: "7500"
+                    - generic [ref=e91]: 1만
+          - generic [ref=e92]:
+            - generic [ref=e93]:
+              - heading "지출 카테고리" [level=2] [ref=e94]
+              - generic [ref=e95]: 이번 달 지출 내역이 없습니다
+            - generic [ref=e96]:
+              - heading "계좌별 잔액" [level=2] [ref=e97]
+              - list [ref=e98]:
+                - listitem [ref=e99]:
+                  - generic [ref=e100]:
+                    - paragraph [ref=e101]: 기본 계좌
+                    - paragraph [ref=e102]: 입출금
+                  - paragraph [ref=e104]: ₩-10,000
+          - generic [ref=e105]:
+            - generic [ref=e106]:
+              - heading "최근 거래" [level=2] [ref=e107]
+              - link "전체 보기 →" [ref=e108] [cursor=pointer]:
+                - /url: /transactions
+            - generic [ref=e109]: 이번 달 거래 내역이 없습니다
+  - button "Open Next.js Dev Tools" [ref=e115] [cursor=pointer]:
+    - img [ref=e116]
+  - alert [ref=e119]
+  - generic [ref=e120]: "0"

@@ -1,0 +1,28 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e6]: 회원가입
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]: 이메일 *
+          - textbox "이메일 *" [ref=e11]:
+            - /placeholder: you@example.com
+        - generic [ref=e12]:
+          - generic [ref=e13]: 닉네임 *
+          - textbox "닉네임 *" [ref=e14]:
+            - /placeholder: 2~20자
+        - generic [ref=e15]:
+          - generic [ref=e16]: 비밀번호 *
+          - textbox "비밀번호 *" [ref=e17]:
+            - /placeholder: 8자 이상
+        - generic [ref=e18]:
+          - generic [ref=e19]: 비밀번호 확인 *
+          - textbox "비밀번호 확인 *" [ref=e20]
+        - button "가입하기" [ref=e21]
+      - paragraph [ref=e22]:
+        - text: 이미 계정이 있으신가요?
+        - link "로그인" [ref=e23] [cursor=pointer]:
+          - /url: /login
+  - button "Open Next.js Dev Tools" [ref=e29] [cursor=pointer]:
+    - img [ref=e30]
+  - alert [ref=e33]

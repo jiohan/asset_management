@@ -1,0 +1,72 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]: 가계부
+      - navigation [ref=e5]:
+        - link "대시보드" [ref=e6] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e7]
+          - text: 대시보드
+        - link "거래 내역" [ref=e12] [cursor=pointer]:
+          - /url: /transactions
+          - img [ref=e13]
+          - text: 거래 내역
+        - link "계좌 관리" [ref=e16] [cursor=pointer]:
+          - /url: /accounts
+          - img [ref=e17]
+          - text: 계좌 관리
+      - generic [ref=e20]:
+        - paragraph [ref=e21]: gurrgini
+        - button "로그아웃" [ref=e23]
+    - main [ref=e24]:
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - heading "거래 내역" [level=1] [ref=e27]
+          - button "+ 거래 추가" [ref=e28]
+          - generic [ref=e30]:
+            - heading "거래 추가" [level=2] [ref=e31]
+            - button "닫기" [ref=e32]:
+              - img [ref=e33]
+        - generic [ref=e38]:
+          - combobox [ref=e39]:
+            - option "2026년 4월" [selected]
+            - option "2026년 3월"
+            - option "2026년 2월"
+            - option "2026년 1월"
+            - option "2025년 12월"
+            - option "2025년 11월"
+            - option "2025년 10월"
+            - option "2025년 9월"
+            - option "2025년 8월"
+            - option "2025년 7월"
+            - option "2025년 6월"
+            - option "2025년 5월"
+            - option "전체 기간"
+          - combobox [ref=e40]:
+            - option "전체 계좌" [selected]
+            - option "기본 계좌"
+          - combobox [ref=e41]:
+            - option "전체 카테고리" [selected]
+            - option "교통"
+            - option "구독료"
+            - option "급여"
+            - option "기타수입"
+            - option "기타지출"
+            - option "보험"
+            - option "부수입"
+            - option "쇼핑"
+            - option "식비"
+            - option "용돈"
+            - option "의료/건강"
+            - option "주거/통신"
+            - option "카페/간식"
+            - option "환불/취소"
+          - combobox [ref=e42]:
+            - option "전체 타입" [selected]
+            - option "수입"
+            - option "지출"
+            - option "이체"
+        - paragraph [ref=e44]: 조건에 맞는 거래가 없습니다.
+  - button "Open Next.js Dev Tools" [ref=e50] [cursor=pointer]:
+    - img [ref=e51]
+  - alert [ref=e54]

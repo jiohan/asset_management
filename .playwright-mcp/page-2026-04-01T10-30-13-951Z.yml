@@ -1,0 +1,22 @@
+- generic [active] [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e46] [cursor=pointer]:
+    - img [ref=e47]
+  - alert [ref=e50]
+  - generic [ref=e53]:
+    - generic [ref=e55]: 로그인
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - generic [ref=e59]: 이메일 *
+          - textbox "이메일 *" [ref=e60]
+        - generic [ref=e61]:
+          - generic [ref=e62]: 비밀번호 *
+          - textbox "비밀번호 *" [ref=e63]
+        - button "로그인" [ref=e64]
+      - generic [ref=e69]: 또는
+      - button "Google로 계속하기" [ref=e71]
+      - generic [ref=e72]:
+        - link "회원가입" [ref=e73] [cursor=pointer]:
+          - /url: /signup
+        - link "비밀번호 찾기" [ref=e74] [cursor=pointer]:
+          - /url: /forgot-password
