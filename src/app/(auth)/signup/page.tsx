@@ -10,9 +10,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
 import { useState } from 'react'
+import { AlertCircle, Eye, EyeOff } from 'lucide-react'
 
 export default function SignUpPage() {
   const [serverError, setServerError] = useState<string | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
   const form = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: { email: '', password: '', passwordConfirm: '', nickname: '' },
@@ -64,7 +67,19 @@ export default function SignUpPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>비밀번호 *</FormLabel>
-                  <FormControl><Input type="password" placeholder="8자 이상" {...field} /></FormControl>
+                  <FormControl>
+                    <div className="relative">
+                      <Input type={showPassword ? 'text' : 'password'} placeholder="8자 이상" {...field} className="pr-10" />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                        aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -75,12 +90,29 @@ export default function SignUpPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>비밀번호 확인 *</FormLabel>
-                  <FormControl><Input type="password" {...field} /></FormControl>
+                  <FormControl>
+                    <div className="relative">
+                      <Input type={showPasswordConfirm ? 'text' : 'password'} {...field} className="pr-10" />
+                      <button
+                        type="button"
+                        onClick={() => setShowPasswordConfirm((v) => !v)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                        aria-label={showPasswordConfirm ? '비밀번호 숨기기' : '비밀번호 보기'}
+                      >
+                        {showPasswordConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            {serverError && <p className="text-sm text-rose-600">{serverError}</p>}
+            {serverError && (
+              <div className="flex items-center gap-2 rounded-md bg-rose-50 border border-rose-200 px-3 py-2 text-sm text-rose-700">
+                <AlertCircle size={16} className="shrink-0" />
+                {serverError}
+              </div>
+            )}
             <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? '처리 중...' : '가입하기'}
             </Button>

@@ -25,11 +25,11 @@ export default function SidebarNav() {
             className={cn(
               'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors',
               active
-                ? 'bg-gray-100 text-gray-900 font-medium'
+                ? 'bg-indigo-50 text-indigo-700 font-medium border-l-2 border-indigo-600'
                 : 'text-gray-500 hover:bg-gray-50'
             )}
           >
-            <Icon size={16} />
+            <Icon size={20} />
             {label}
           </Link>
         )

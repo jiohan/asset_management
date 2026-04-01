@@ -11,6 +11,7 @@ import { formatKRW } from '@/lib/format'
 import TransactionFilters from './TransactionFilters'
 import DeleteTransactionButton from './DeleteTransactionButton'
 import TransactionDrawer from './TransactionDrawer'
+import EmptyTransactionsState from './EmptyTransactionsState'
 
 const TYPE_LABELS: Record<string, string> = {
   income: '수입',
@@ -63,9 +64,7 @@ export default async function TransactionsPage({
 
       <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
         {transactions.length === 0 ? (
-          <p className="px-6 py-10 text-center text-sm text-gray-400">
-            조건에 맞는 거래가 없습니다.
-          </p>
+          <EmptyTransactionsState accounts={accounts} categories={categories} />
         ) : (
           <table className="w-full text-sm">
             <thead>

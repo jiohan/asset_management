@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { formatKRW } from '@/lib/format'
 import { EditAccountDialog, DeactivateAccountDialog } from './AccountActions'
 import type { Account } from '@/features/accounts/balance-calculator'
+import { Banknote, CreditCard, PiggyBank, TrendingUp, Wallet } from 'lucide-react'
 
 const ACCOUNT_TYPE_LABELS: Record<string, string> = {
   cash: '현금',
@@ -13,6 +14,14 @@ const ACCOUNT_TYPE_LABELS: Record<string, string> = {
   savings: '저축',
   investment: '투자',
   card: '카드',
+}
+
+const ACCOUNT_TYPE_ICONS = {
+  cash: Banknote,
+  checking: Wallet,
+  savings: PiggyBank,
+  investment: TrendingUp,
+  card: CreditCard,
 }
 
 export default function AccountList({
@@ -36,6 +45,7 @@ export default function AccountList({
         {accounts.map((account) => {
           const balance = balances[account.id] ?? 0
           const isCard = account.account_type === 'card'
+          const TypeIcon = ACCOUNT_TYPE_ICONS[account.account_type as keyof typeof ACCOUNT_TYPE_ICONS] ?? Wallet
 
           return (
             <div
@@ -43,6 +53,9 @@ export default function AccountList({
               className="flex items-center justify-between px-6 py-4"
             >
               <div className="flex items-center gap-3">
+                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${account.is_active ? 'bg-gray-100 text-gray-500' : 'bg-gray-50 text-gray-300'}`}>
+                  <TypeIcon size={18} />
+                </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <span className={account.is_active ? 'text-sm font-medium text-gray-900' : 'text-sm font-medium text-gray-400'}>
@@ -83,7 +96,8 @@ export default function AccountList({
                     </Button>
                     <Button
                       size="sm"
-                      variant="outline"
+                      variant="ghost"
+                      className="text-gray-400 hover:text-gray-600"
                       onClick={() => setDeactivateTarget(account)}
                     >
                       비활성화
