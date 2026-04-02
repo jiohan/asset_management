@@ -18,7 +18,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | DB / Auth | Supabase (PostgreSQL + RLS + Auth) |
 | Schema management | Supabase CLI migrations (대시보드 직접 SQL 금지) |
 | Styling | Tailwind CSS v4 + shadcn/ui |
-| Server state | TanStack Query v5 (Phase 3부터 필요 시 도입. Phase 2까지는 Server Component + revalidatePath 패턴만 사용) |
+| Server state | TanStack Query v5 (현재 미도입. Server Component + revalidatePath 패턴 유지 중. 필요 시 도입 검토) |
 | Forms | Zod (Server Actions에서 직접 safeParse). 인증 폼(로그인/회원가입)만 React Hook Form 사용. 앱 폼(거래/계좌)은 미사용 |
 | Charts | Recharts v3 |
 | AI report | Anthropic Claude API (Phase 5 시작 직전 모델 ID 재확인) |
@@ -55,7 +55,7 @@ Browser
        │    ├─ Supabase DB (RLS 적용, 사용자 데이터 완전 분리)
        │    ├─ Resend (이메일 인증 / 비밀번호 재설정)
        │    └─ Anthropic Claude API (AI 월간 리포트)
-       └─ TanStack Query (Phase 3부터 도입 예정. 현재는 미사용)
+       └─ TanStack Query (현재 미도입 — Server Component + revalidatePath 패턴으로 대체)
 ```
 
 ### DB Tables
@@ -72,7 +72,9 @@ Browser
 - **일반 계좌**: `opening_balance + Σincome - Σexpense + Σtransfer수신 - Σtransfer송신`
 - **투자 계좌**: `opening_balance + Σtransfer수신 - Σtransfer송신 - Σ매수(qty×price+costs) + Σ매도(qty×price-costs) + Σinvestment_events`
 - **카드 계좌** (부채): `opening_balance + Σexpense - Σtransfer수신(납부)` — DB는 양수 저장, UI에서 부채 표시
-- **총자산**: `Σ(일반+투자 계좌 잔액) - Σ카드계좌잔액`
+- **사용 가능 자산**: `Σ(cash/checking/savings 잔액) - Σ카드계좌잔액`
+- **투자 자산**: `Σ투자계좌현금 + Σ보유주식장부가` (장부가 기준)
+- **전체 자산**: `사용 가능 자산 + 투자 자산`
 
 투자 매수/매도는 `transactions`에 기록하지 않음. `investment_trades`만으로 투자 계좌 현금 변화를 계산.
 
@@ -81,7 +83,7 @@ Browser
 ### Auth Flow
 
 `/auth/callback` → 신규 Google 사용자는 `/nickname` → `/dashboard`
-미인증 상태로 `(app)` 보호 라우트(`/dashboard`, `/transactions`, `/accounts`, `/setup-account`) 접근 시 → `/login` (미들웨어/프록시 처리)
+미인증 상태로 `(app)` 보호 라우트(`/dashboard`, `/transactions`, `/accounts`, `/investments`, `/setup-account`) 접근 시 → `/login` (미들웨어/프록시 처리)
 회원가입/Google 로그인 완료 후 서버 액션에서 기본 카테고리 14개 자동 생성 (계좌는 /setup-account에서 수동 등록)
 
 ### Development Phases (Vertical Slice)
@@ -112,7 +114,7 @@ Phase 진행 시: vertical-slices.md를 기반으로 상세 계획 문서(slice1
 
 ## MVP Testing Minimum
 
-- 잔액 계산 함수 단위 테스트 (Vitest)
+- 잔액 계산 함수 + 보유 주식 계산 함수(holdings) 단위 테스트 (Vitest)
 - 회원가입 → 지출 1건 → 잔액 반영까지 E2E 1개 (Playwright)
 - RLS smoke check — 다른 사용자 데이터 접근 불가 확인
 
