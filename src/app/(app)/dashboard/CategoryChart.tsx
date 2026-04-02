@@ -7,6 +7,7 @@ import {
   Tooltip,
   Legend,
 } from 'recharts'
+import { PieChart as PieChartIcon } from 'lucide-react'
 import { formatKRW } from '@/lib/format'
 import type { CategoryExpense } from '@/features/dashboard/aggregations'
 
@@ -37,7 +38,8 @@ export default function CategoryChart({ data }: { data: CategoryExpense[] }) {
     <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6">
       <h2 className="text-sm font-semibold text-gray-700 mb-4">지출 카테고리</h2>
       {chartData.length === 0 ? (
-        <div className="flex items-center justify-center h-[240px] text-sm text-gray-400">
+        <div className="flex flex-col items-center justify-center h-[240px] gap-2 text-sm text-gray-400">
+          <PieChartIcon size={32} className="text-gray-200" />
           이번 달 지출 내역이 없습니다
         </div>
       ) : (

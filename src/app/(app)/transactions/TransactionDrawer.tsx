@@ -70,7 +70,7 @@ export default function TransactionDrawer({
       {/* 백드롭 */}
       {open && (
         <div
-          className="fixed inset-0 z-40 bg-black/30"
+          className="fixed inset-0 z-40 bg-black/50"
           onClick={closeDrawer}
         />
       )}

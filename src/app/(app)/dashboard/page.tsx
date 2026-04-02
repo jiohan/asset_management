@@ -108,21 +108,21 @@ export default async function DashboardPage({
   }))
 
   return (
-    <main className="min-h-screen bg-[#F9F9F8]">
-      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
-        {/* 헤더: 제목 + 월 선택 */}
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-gray-900">대시보드</h1>
-          {/* useSearchParams 사용으로 Suspense 래핑 필요 */}
-          <Suspense
-            fallback={
-              <div className="h-10 w-48 rounded-lg bg-gray-100 animate-pulse" />
-            }
-          >
-            <MonthSelector currentMonth={currentMonth} />
-          </Suspense>
-        </div>
+    <div className="min-h-screen bg-[#F9F9F8]">
+      {/* 상단 헤더 바 */}
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+        <h1 className="text-xl font-semibold text-gray-900">대시보드</h1>
+        {/* useSearchParams 사용으로 Suspense 래핑 필요 */}
+        <Suspense
+          fallback={
+            <div className="h-9 w-48 rounded-lg bg-gray-100 animate-pulse" />
+          }
+        >
+          <MonthSelector currentMonth={currentMonth} />
+        </Suspense>
+      </div>
 
+      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
         {/* 통계 카드 4개 */}
         <StatsCards totalAssets={totalAssets} stats={stats} />
 
@@ -138,6 +138,6 @@ export default async function DashboardPage({
         {/* 최근 거래 5건 */}
         <RecentTransactions transactions={recentTransactions} />
       </div>
-    </main>
+    </div>
   )
 }

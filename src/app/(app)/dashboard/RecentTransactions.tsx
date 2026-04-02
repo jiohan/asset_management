@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ReceiptText } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { formatKRW } from '@/lib/format'
 import type { TransactionWithRelations } from '@/features/transactions/queries'
@@ -27,8 +28,14 @@ export default function RecentTransactions({
       </div>
 
       {transactions.length === 0 ? (
-        <div className="py-8 text-center text-sm text-gray-400">
-          이번 달 거래 내역이 없습니다
+        <div className="py-8 text-center space-y-2">
+          <div className="flex justify-center">
+            <ReceiptText size={32} className="text-gray-200" />
+          </div>
+          <p className="text-sm text-gray-400">이번 달 거래 내역이 없습니다</p>
+          <Link href="/transactions" className="text-sm text-indigo-600 hover:underline">
+            첫 거래 기록하기 →
+          </Link>
         </div>
       ) : (
         <div className="overflow-x-auto">

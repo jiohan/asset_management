@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { formatKRW } from '@/lib/format'
 import { EditAccountDialog, DeactivateAccountDialog } from './AccountActions'
 import type { Account } from '@/features/accounts/balance-calculator'
-import { Banknote, CreditCard, PiggyBank, TrendingUp, Wallet } from 'lucide-react'
+import { Banknote, CreditCard, PiggyBank, TrendingUp, Wallet, WalletCards } from 'lucide-react'
 
 const ACCOUNT_TYPE_LABELS: Record<string, string> = {
   cash: '현금',
@@ -36,11 +36,14 @@ export default function AccountList({
 
   return (
     <>
-      <div className="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white">
+      <div className="divide-y divide-gray-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white overflow-hidden">
         {accounts.length === 0 && (
-          <p className="px-6 py-8 text-center text-sm text-gray-400">
-            등록된 계좌가 없습니다.
-          </p>
+          <div className="px-6 py-10 text-center space-y-2">
+            <div className="flex justify-center">
+              <WalletCards size={32} className="text-gray-200" />
+            </div>
+            <p className="text-sm text-gray-400">등록된 계좌가 없습니다.</p>
+          </div>
         )}
         {accounts.map((account) => {
           const balance = balances[account.id] ?? 0

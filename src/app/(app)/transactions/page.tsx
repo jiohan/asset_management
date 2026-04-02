@@ -50,19 +50,21 @@ export default async function TransactionsPage({
   ])
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div>
+      {/* 상단 헤더 바 */}
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
         <h1 className="text-xl font-semibold text-gray-900">거래 내역</h1>
         <TransactionDrawer accounts={accounts} categories={categories} />
       </div>
 
+      <div className="p-8 max-w-5xl mx-auto">
       <div className="mb-4">
         <Suspense fallback={<div className="h-9" />}>
           <TransactionFilters accounts={accounts} categories={categories} />
         </Suspense>
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+      <div className="rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white overflow-hidden">
         {transactions.length === 0 ? (
           <EmptyTransactionsState accounts={accounts} categories={categories} />
         ) : (
@@ -82,7 +84,9 @@ export default async function TransactionsPage({
               {transactions.map((tx) => (
                 <tr key={tx.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
-                    {tx.transaction_date.slice(5)}
+                    {month
+                      ? tx.transaction_date.slice(5).replace('-', '/')
+                      : tx.transaction_date.replace(/-/g, '/')}
                   </td>
                   <td className="px-4 py-3">
                     <Badge
@@ -134,6 +138,7 @@ export default async function TransactionsPage({
             </tbody>
           </table>
         )}
+      </div>
       </div>
     </div>
   )
