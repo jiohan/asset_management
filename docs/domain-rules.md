@@ -72,6 +72,8 @@
 
 UNIQUE: `(user_id, account_id, market, symbol)`
 
+CHECK 제약: `market IN ('KRX')`, `asset_type IN ('stock', 'etf')`
+
 ### investment_trades
 | 컬럼 | 타입 | 비고 |
 |------|------|------|
@@ -88,6 +90,10 @@ UNIQUE: `(user_id, account_id, market, symbol)`
 | created_at | TIMESTAMPTZ | |
 | updated_at | TIMESTAMPTZ | |
 
+CHECK 제약: `trade_type IN ('buy', 'sell')`, `quantity > 0`, `unit_price > 0`, `costs >= 0`
+
+소유권 검증 트리거: `asset_id`의 `account_id`가 해당 거래의 `account_id`와 일치해야 함 (다른 계좌 자산에 거래 기록 방지).
+
 ### investment_events
 | 컬럼 | 타입 | 비고 |
 |------|------|------|
@@ -101,6 +107,10 @@ UNIQUE: `(user_id, account_id, market, symbol)`
 | memo | TEXT | 선택 |
 | created_at | TIMESTAMPTZ | |
 | updated_at | TIMESTAMPTZ | |
+
+CHECK 제약: `event_type IN ('dividend', 'distribution')`, `amount > 0`
+
+소유권 검증 트리거: `asset_id`의 `account_id`가 해당 이벤트의 `account_id`와 일치해야 함.
 
 ### ai_monthly_reports
 | 컬럼 | 타입 | 비고 |
@@ -276,6 +286,22 @@ UNIQUE 제약 없음 — 같은 월에 여러 개 저장 가능.
 - UI에서만 "결제 예정액 ₩X" 레이블로 부채 표시.
 - 총자산 계산 시 차감.
 
+### 자산 3분류 계산 규칙
+
+| 구분 | 계산 공식 |
+|------|----------|
+| 사용 가능 자산 | cash + checking + savings 잔액 합계 - card 잔액 합계 |
+| 투자 자산 | 투자 계좌 현금 잔액 합계 + 보유 주식 장부가 합계 (장부가 기준) |
+| 전체 자산 | 사용 가능 자산 + 투자 자산 |
+
+- 투자 자산은 실시간 시세가 아닌 **장부가 기준**임을 UI에서 명시.
+- 사용자가 투자 계좌를 여러 개 보유한 경우 전체 합산.
+
+### 대시보드 자산 카드 표시 규칙
+- 대시보드에서 사용 가능 자산 / 투자 자산 / 전체 자산을 **별도 카드**로 구분 표시.
+- 투자 자산 카드에는 **"장부가 기준"** 뱃지를 표시하여 실시간 평가가 아님을 알림.
+- 투자 계좌가 없는 경우 투자 자산 카드는 표시하지 않거나 0으로 표시.
+
 ---
 
 ## 투자 기능 규칙 (v1 범위)
@@ -293,17 +319,38 @@ UNIQUE 제약 없음 — 같은 월에 여러 개 저장 가능.
 - 투자 계좌, 자산, 거래 유형(buy/sell), 수량, 단가, 제비용, 거래일
 - 수량: 양의 정수만 (KRX 1주 단위). 0 불가.
 - 단가: 양의 정수 (KRW). 0 불가.
-- 제비용: 0 이상 정수. 0 허용 (수수료 없는 경우).
+- 제비용: 0 이상 정수. 0 허용 (수수료 없는 경우). **자본화 처리**: 매수 시 취득원가에 포함, 매도 시 수익에서 차감.
 - 매도 시: 현재 보유 수량 >= 매도 수량 이어야 저장 가능. 서버 액션에서 검증.
+- 매수 삭제 시: 삭제 후 해당 자산의 잔여 보유 수량 >= 0 이어야 삭제 가능. 서버 액션에서 검증.
+
+### 투자 계좌 현금 잔액 계산 공식
+```
+투자 계좌 현금 잔액
+= opening_balance
++ Σ transfer 수신 (transfer_to_account_id = 계좌)
+- Σ transfer 송신 (account_id = 계좌)
+- Σ 매수 (quantity × unit_price + costs)
++ Σ 매도 (quantity × unit_price - costs)
++ Σ investment_events.amount
+```
+
+### 보유 수량 및 장부가 계산
+- **보유 수량** (asset_id별) = Σ 매수 수량 - Σ 매도 수량
+- **장부가** = Σ(매수 qty × unit_price + costs) - Σ(매도 qty × unit_price - costs)
+- 순수 함수로 계산: `src/features/investments/holdings.ts`
+- 보유 수량이 0인 자산(전량 매도)도 기록은 유지. UI에서 시각적으로 구분 표시.
+
+### 투자 이벤트 타입 (v1)
+`dividend` (배당) / `distribution` (분배금)
+
+- `events.amount`는 투자 계좌 현금 잔액을 직접 증가시킨다 (배당·분배금은 현금 수입으로 처리).
+- `amount`는 양의 정수 필수. 0 불가.
 
 ### v1에서 하지 않는 것
 - 평가손익 계산
 - 실시간 시세 기반 자산 평가
 - 수익률 고도화
 - 평균단가 기반 분석
-
-### 투자 이벤트 타입 (v1)
-`dividend` (배당) / `distribution` (분배금)
 
 ---
 
@@ -389,8 +436,10 @@ type DashboardStats = {
   netIncome: number             // 순수입 = totalIncome - totalExpense
   totalTransfer: number         // 이체 총액 (정보용, 수입/지출 미포함)
 
-  // 전체 기준
-  totalAssets: number           // 총자산 = (일반+투자 계좌 합계) - 카드 계좌 합계
+  // 전체 기준 (자산 3분류)
+  liquidAssets: number          // 사용 가능 자산 = (cash+checking+savings 합계) - 카드 합계
+  investmentValue: number       // 투자 자산 = 투자 계좌 현금 합계 + 보유 주식 장부가 합계 (장부가 기준)
+  totalAssets: number           // 전체 자산 = liquidAssets + investmentValue
 
   accountBalances: Array<{
     id: string
