@@ -68,6 +68,8 @@
 | Small | 14px (text-sm) | 레이블, 보조 텍스트, 필터 옵션 |
 | Tiny | 12px (text-xs) | 날짜, 메타정보, 카테고리 뱃지 |
 
+> **한국어 주의:** 한국어 텍스트에 `uppercase`, `tracking-wide` 사용 금지. 한글은 대소문자 구분이 없어 `uppercase`가 무효이고, `letter-spacing` 확대는 가독성을 해친다.
+
 ---
 
 ## Spacing Scale
@@ -94,6 +96,7 @@
 | Destructive (빨간) | 삭제, 계정 탈퇴 등 위험 액션 |
 
 - 삭제 버튼은 반드시 확인 모달과 함께 사용
+- **Primary 버튼 색상은 `bg-indigo-600`**. 무채색(`bg-gray-900`) 버튼을 Primary 용도로 사용하지 않는다.
 
 ### 입력창 (Input)
 
@@ -104,9 +107,18 @@
 ### 카드 (Card)
 
 - 배경: 흰색 (dark mode는 v2)
-- 테두리: 원칙적으로 없음. 필요 시 연한 그레이 (border-gray-100)
-- 모서리: rounded-2xl 방향 (확정 전까지 rounded-lg 사용 가능)
-- 그림자: 레퍼런스 방향 → 넓고 연한 shadow. 확정 전까지 shadow-sm 유지
+- 테두리: 사용 금지. `border border-gray-200` 방식 카드 사용 안 함
+- 모서리: `rounded-2xl` 고정
+- 그림자: `shadow-[0_8px_30px_rgb(0,0,0,0.04)]` 고정
+- 모든 컨테이너 카드(리스트/테이블 포함)는 위 모서리·그림자로 통일
+
+### 아이콘 크기
+
+| 맥락 | 크기 |
+|------|------|
+| 사이드바 내비게이션 | 20px 이상 |
+| 인라인 텍스트 옆 | 16px |
+| 정보 밀도 높은 테이블 내 | 14~16px |
 
 ---
 
@@ -130,6 +142,22 @@
 - 지출: 빨간색 + `-₩1,234,567`
 - 이체: 중립색 + `₩1,234,567` (부호 없음)
 - 카드 결제 예정액: "결제 예정 ₩1,234,567" 레이블과 함께 표시
+- **계산 결과 음수(총자산, 잔액 등)**: `text-rose-600` 조건부 적용. 양수/0은 기본 `text-gray-900`.
+
+---
+
+## 빈 상태 (Empty State)
+
+- 빈 상태에는 반드시 **CTA(다음 행동 유도 버튼/링크)**를 포함한다. 텍스트만 있는 빈 상태 금지.
+- 패턴:
+  ```jsx
+  <div className="text-center py-8">
+    <p className="text-sm text-gray-400 mb-3">안내 메시지</p>
+    <Link href="..." className="text-sm text-indigo-600 hover:underline">
+      액션 →
+    </Link>
+  </div>
+  ```
 
 ---
 
