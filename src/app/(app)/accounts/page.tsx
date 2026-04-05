@@ -1,5 +1,5 @@
 import { getAccounts, getAllTransactionsForBalance } from '@/features/accounts/queries'
-import { calculateAllBalances, calculateTotalAssets } from '@/features/accounts/balance-calculator'
+import { calculateAllBalances, calculateTotalAssets, calculateLiquidAssets } from '@/features/accounts/balance-calculator'
 import { formatKRW } from '@/lib/format'
 import AccountList from './AccountList'
 import CreateAccountForm from './CreateAccountForm'
@@ -16,7 +16,7 @@ export default async function AccountsPage() {
   const cardBalance = accounts
     .filter((a) => a.account_type === 'card')
     .reduce((sum, a) => sum + (balancesMap.get(a.id) ?? 0), 0)
-  const usableBalance = totalAssets + cardBalance
+  const usableBalance = calculateLiquidAssets(accounts, balancesMap)
 
   return (
     <div>
